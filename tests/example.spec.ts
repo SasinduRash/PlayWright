@@ -1,18 +1,27 @@
 import { test, expect } from '@playwright/test';
+import { LicenseApplicationPage } from '../src/pages/licenseApply.page';
 
-test('has title', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+test('Apply Investment Manager license with valid data', async ({ page }) => {
+  const app = new LicenseApplicationPage(page);
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
-});
+  await app.loginEntity('rash@mail.com', 'Test123#');
+  await app.openLicenses();
+  await app.startNewLicense('Investment Manager');
 
-test('get started link', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
+  // fill application form
 
-  // Click the get started link.
-  await page.getByRole('link', { name: 'Get started' }).click();
+  await app.fillApplicantInformation();
 
-  // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
+  await app.fillGroupStructure();
+
+  await app.addDirector();
+
+  await app.fillPage4();
+
+  await app.uploadDocuments();
+
+  await app.fillPayment();
+
+  // final assertion - ensure a licenses url or confirmation
+  await expect(page).toHaveURL(/licenses\/.*/);
 });

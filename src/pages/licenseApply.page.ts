@@ -62,10 +62,21 @@ export class LicenseApplicationPage {
     // Add holding company
     await this.page.getByRole('button', { name: '+ Add Entry' }).click();
     await this.page.getByRole('textbox', { name: 'Holding Company' }).fill('ABC 2');
+    await this.page.keyboard.press('Tab');
+
     await this.page.getByRole('textbox', { name: 'Name of The Company' }).fill('XYZ');
-    await this.page.getByRole('combobox').selectOption('Partnership');
-    await this.page.waitForTimeout(1000);
+    await this.page.keyboard.press('Tab');
+
+    const combo = this.page.getByRole('combobox');
+    await combo.selectOption('Associate Company');
+    await combo.press('Tab');
+
+    await this.page.getByRole('button', { name: '+ Add Another Field' }).click();
+    await this.page.getByRole('row', { name: 'Select Category ' }).getByPlaceholder('Name of The Company').click();
+    await this.page.getByRole('row', { name: 'Select Category ' }).getByPlaceholder('Name of The Company').fill('XYZ2');
+    await this.page.getByRole('row', { name: 'XYZ2 Select Category ' }).getByRole('combobox').selectOption('Partnership');
     await this.page.getByRole('button', { name: 'Save' }).click();
+
 
     // Ultimate Holding
     await this.page.locator('subsection').filter({ hasText: 'Ultimate Holding CompanyIf' }).getByPlaceholder('Enter Name').fill('N/A');
@@ -113,8 +124,8 @@ export class LicenseApplicationPage {
     await this.page.getByRole('textbox', { name: 'Enter State/Province/Region' }).fill('Western');
     await this.page.getByRole('textbox', { name: 'Enter Postal Code' }).fill('12560');
     await this.page.locator('form-field-wrapper').filter({ hasText: 'Country Select Country' }).getByRole('combobox').selectOption('Sri Lanka');
-    await this.page.waitForTimeout(1000);
-    await this.page.getByRole('button', { name: 'Save' }).click();
+    const saveBtn = this.page.getByRole('button', { name: 'Save' });
+    await saveBtn.click();
 
     // several radio questions
     await this.selectRadio('rejected by the SEC', 0);
