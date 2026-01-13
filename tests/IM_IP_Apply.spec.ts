@@ -96,6 +96,9 @@ test('Apply Investment Manager license with valid data', async ({ page }) => {
   await page.getByRole('button', { name: 'Next' }).click();
 
   // Page 2
+
+  const filePath = 'C:/Users/MSI/Downloads/postman.jpg';
+
   const page2 = page
   .locator('form-field-wrapper')
   .filter({ hasText: 'Group Structure' });
@@ -103,9 +106,9 @@ test('Apply Investment Manager license with valid data', async ({ page }) => {
   await expect(page2).toBeVisible();
   await page.locator('form-field-wrapper').filter({ hasText: 'Group Structure' }).locator('img').click();
   const fileInput = page.locator('input[type="file"]').nth(0);
-  await fileInput.setInputFiles('C:/Users/MSI/Downloads/postman.jpg');
+  await fileInput.setInputFiles(filePath);
   await page.locator('input[type="file"]').nth(1)
-    .setInputFiles('C:/Users/MSI/Downloads/postman.jpg');
+    .setInputFiles(filePath);
 
   await page.getByRole('radio', { name: 'No' }).check();
   await page.getByRole('combobox').selectOption('Individual');
@@ -194,9 +197,9 @@ test('Apply Investment Manager license with valid data', async ({ page }) => {
   // Page 5
   await page.locator('form-field-wrapper').filter({ hasText: 'Memorandum/ Articles of' }).locator('img').click();
   const fileInput2 = page.locator('input[type="file"]').nth(0);
-  await fileInput2.setInputFiles('C:/Users/MSI/Downloads/postman.jpg');
+  await fileInput2.setInputFiles(filePath);
   await page.locator('input[type="file"]').nth(1)
-    .setInputFiles('C:/Users/MSI/Downloads/postman.jpg');
+    .setInputFiles(filePath);
   await page.getByRole('textbox', { name: 'Regulator' }).click();
   await page.getByRole('textbox', { name: 'Regulator' }).fill('ABC');
   await page.getByRole('textbox', { name: 'Regulated Activity' }).click();
@@ -226,8 +229,6 @@ test('Apply Investment Manager license with valid data', async ({ page }) => {
 
     await fileInput.setInputFiles(filePath);
   }
-
-  const filePath = 'C:/Users/MSI/Downloads/postman.jpg';
 
   await uploadDocument(page, 'Business Model Documentation', filePath);
   await uploadDocument(page, "Applicant's Declaration", filePath);
