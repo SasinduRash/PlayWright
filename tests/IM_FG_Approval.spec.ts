@@ -1,98 +1,35 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
-test('Approve In Principal Investment Manager license ', async ({ page }) => {
+test('test', async ({ page }) => {
 
-// Log as cluster 4 data validator
   await page.goto('https://dev-sl-sec.corewatch.io/bypass/int-login');
-  await page.getByRole('textbox', { name: 'Email' }).click();
-  await page.getByRole('textbox', { name: 'Email' }).fill('cluster4.dv@mailinator.com');
-  await page.getByRole('textbox', { name: 'Password' }).click();
-  await page.getByRole('textbox', { name: 'Password' }).fill('Test@123');
-  await page.getByRole('button', { name: 'Log In' }).click();
 
-// Navigate to licenses and mark as checked
-  await page.getByRole('button', { name: 'Licenses' }).click();
-  await page
-    .locator('.expanded-content')
-    .locator('i.expand-btn')
-    .first()
-    .click();
-
-  const firstPendingRow = page
-    .locator('app-table-card') 
-    .filter({ hasText: 'Data Validation Team' })
-    .first();
-
-  // Open dropdown of FIRST pending row
-  await firstPendingRow
-    .locator('i.icon-border.bi-chevron-down') .nth(0)
-    .click();
-
-  // Click View
-  await page.getByRole('button', { name: 'View' }).click();
-  await page.getByRole('button', { name: 'Next' }).click();
-  await page.getByRole('button', { name: 'Next' }).click();
-  await page.getByRole('button', { name: 'Next' }).click();
-  await page.getByRole('button', { name: 'Next' }).click();
-  await page.getByRole('button').filter({ hasText: /^$/ }).nth(2).click();
-  await page.getByRole('button', { name: 'Mark as Checked' }).click();
-  await page.getByRole('button', { name: 'Sign Out' }).click();
-  await page.getByRole('button', { name: 'Sign Out' }).click();
-
-// Log as cluster 3 data validator
-  await page.getByRole('textbox', { name: 'Email' }).click();
-  await page.getByRole('textbox', { name: 'Email' }).fill('cluster3.dv@mailinator.com');
-  await page.getByRole('textbox', { name: 'Password' }).click();
-  await page.getByRole('textbox', { name: 'Password' }).fill('Test@123');
-  await page.getByRole('button', { name: 'Log In' }).click();
-
-// Navigate to licenses and mark as checked
-  await page.getByRole('button', { name: 'Licenses' }).click();
-  await page
-    .locator('.expanded-content')
-    .locator('i.expand-btn')
-    .first()
-    .click();
-
-  // Open dropdown of FIRST pending row
-  await firstPendingRow
-    .locator('i.icon-border.bi-chevron-down') .nth(0)
-    .click();
-
-  // Click View
-  await page.getByRole('button', { name: 'View' }).click();
-  await page.getByRole('button', { name: 'Next' }).click();
-  await page.getByRole('button', { name: 'Next' }).click();
-  await page.getByRole('button', { name: 'Next' }).click();
-  await page.getByRole('button', { name: 'Next' }).click();
-  await page.locator('.col-12.col-md-12 > form-field > .field-data-filled > .vstack > .grey-600-text.f-13 > json-form-element-options > .options-wrapper > div:nth-child(2) > .icon-button')  .click();
-  await page.getByRole('button', { name: 'Mark as Checked' }).click();
-  await page.locator('div:nth-child(2) > form-field > .field-data-filled > .vstack > .grey-600-text.f-13 > json-form-element-options > .options-wrapper > div:nth-child(2) > .icon-button') .click();
-  await page.getByRole('button', { name: 'Mark as Checked' }).click();
-  await page.getByRole('button', { name: 'Sign Out' }).click();
-  await page.getByRole('button', { name: 'Sign Out' }).click();
-
-// Log in as data validator
+// Log as data validator 
   await page.getByRole('textbox', { name: 'Email' }).click();
   await page.getByRole('textbox', { name: 'Email' }).fill('datavalidator1@mailinator.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
   await page.getByRole('textbox', { name: 'Password' }).fill('Test@123');
   await page.getByRole('button', { name: 'Log In' }).click();
 
-// Navigate to licenses and approve
+//Navigate to licenses and approve
   await page.getByRole('button', { name: 'Licenses' }).click();
+    
   await page
     .locator('.expanded-content')
     .locator('i.expand-btn')
-    .first()
+    .nth(1)
     .click();
+
+  const firstPendingRow = page
+    .locator('app-table-card') 
+    .filter({ hasText: 'Data Validation Team' })
+    .nth(1);
 
   // Open dropdown of FIRST pending row
   await firstPendingRow
     .locator('i.icon-border.bi-chevron-down') .nth(0)
     .click();
 
-  // Click View
   await page.getByRole('button', { name: 'View' }).click();
   await page.getByRole('button', { name: 'Approve' }).click();
   await page.waitForTimeout(2000);
@@ -101,7 +38,7 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   await page.getByRole('button', { name: 'Sign Out' }).click();
   await page.getByRole('button', { name: 'Sign Out' }).click();
 
-// Log in as finance head
+// Log as finance head
   await page.getByRole('textbox', { name: 'Email' }).click();
   await page.getByRole('textbox', { name: 'Email' }).fill('finance1@mailinator.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
@@ -113,26 +50,25 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   await page
     .locator('.expanded-content')
     .locator('i.expand-btn')
-    .first()
+    .nth(1)
     .click();
 
-  const SecondPendingRow = page
+  const secondPendingRow = page
     .locator('app-table-card')
 
-  // Open dropdown of FIRST pending row
-  await SecondPendingRow
+  await secondPendingRow
     .locator('i.icon-border.bi-chevron-down') .nth(1)
     .click();
 
-  // Click View
   await page.getByRole('button', { name: 'View' }).click();
   await page.getByRole('button', { name: 'Approve' }).click();
+  await page.waitForTimeout(2000);
   await page.getByRole('button', { name: 'Approve' }).click();
   await page.getByRole('button', { name: 'OK' }).click();
   await page.getByRole('button', { name: 'Sign Out' }).click();
   await page.getByRole('button', { name: 'Sign Out' }).click();
 
-// Log in as cluster head
+// Log as cluster head
   await page.getByRole('textbox', { name: 'Email' }).click();
   await page.getByRole('textbox', { name: 'Email' }).fill('clusterhead1@mailinator.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
@@ -144,17 +80,16 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   await page
     .locator('.expanded-content')
     .locator('i.expand-btn')
-    .first()
+    .nth(1)
     .click();
 
-  const ThirdPendingRow = page
-    .locator('app-table-card')
+  const thirdPendingRow = page
+    .locator('app-table-card') 
 
-  await ThirdPendingRow
+  await thirdPendingRow
     .locator('i.icon-border.bi-chevron-down') .nth(2)
     .click();
 
-  // Click View
   await page.getByRole('button', { name: 'View' }).click();
   await page.getByRole('button', { name: 'Approve' }).click();
   await page.waitForTimeout(2000);
@@ -163,7 +98,7 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   await page.getByRole('button', { name: 'Sign Out' }).click();
   await page.getByRole('button', { name: 'Sign Out' }).click();
 
-// Log in as director
+// Log as director
   await page.getByRole('textbox', { name: 'Email' }).click();
   await page.getByRole('textbox', { name: 'Email' }).fill('director1@mailinator.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
@@ -175,17 +110,16 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   await page
     .locator('.expanded-content')
     .locator('i.expand-btn')
-    .first()
+    .nth(1)
     .click();
 
-  const FourthPendingRow = page
-    .locator('app-table-card')
+  const fourthPendingRow = page
+    .locator('app-table-card') 
 
-  await FourthPendingRow
+  await fourthPendingRow
     .locator('i.icon-border.bi-chevron-down') .nth(3)
     .click();
 
-  // Click View
   await page.getByRole('button', { name: 'View' }).click();
   await page.getByRole('button', { name: 'Approve' }).click();
   await page.waitForTimeout(2000);
@@ -194,122 +128,82 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   await page.getByRole('button', { name: 'Sign Out' }).click();
   await page.getByRole('button', { name: 'Sign Out' }).click();
 
-// Log in as data validator 
+// Log as data validator
   await page.getByRole('textbox', { name: 'Email' }).click();
   await page.getByRole('textbox', { name: 'Email' }).fill('datavalidator1@mailinator.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
   await page.getByRole('textbox', { name: 'Password' }).fill('Test@123');
   await page.getByRole('button', { name: 'Log In' }).click();
 
-// Navigate to licenses and generate Memo Attachment
+// Navigate to licenses and generate commission paper
   await page.getByRole('button', { name: 'Licenses' }).click();
   await page
     .locator('.expanded-content')
     .locator('i.expand-btn')
-    .first()
+    .nth(1)
     .click();
-  const FifthPendingRow = page
-    .locator('app-table-card')
 
-  await FifthPendingRow
+  const fifthPendingRow = page
+    .locator('app-table-card') 
+
+  await fifthPendingRow
     .locator('i.icon-border.bi-chevron-down') .nth(4)
     .click();
 
-  // Click View
   await page.getByRole('button', { name: 'View' }).click();
-  await page.getByRole('textbox', { name: 'Enter Title' }).click();
-  await page.getByRole('textbox', { name: 'Enter Title' }).fill('Test Title');
-  await page.getByRole('textbox', { name: 'Enter Heading' }).click();
-  await page.getByRole('textbox', { name: 'Enter Heading' }).fill('Test Heading');
-  await page.locator('#editor-container').getByRole('paragraph').filter({ hasText: /^$/ }).click();
-  await page.locator('.ql-editor').fill('Test Content');
-  await page.waitForTimeout(3000);
+
+  // Generate Commission Paper
+  await page.getByRole('textbox', { name: 'Enter Paper Number' }).click();
+  await page.getByRole('textbox', { name: 'Enter Paper Number' }).fill('CP_001');
+  await page.getByRole('textbox', { name: 'Enter Subject' }).click();
+  await page.getByRole('textbox', { name: 'Enter Subject' }).fill('Test Subject');
+  await page.getByRole('textbox', { name: 'Enter Originating Department' }).click();
+  await page.getByRole('textbox', { name: 'Enter Originating Department' }).fill('Admin');
+  await page.getByRole('textbox', { name: 'Enter Recommended By' }).click();
+  await page.getByRole('textbox', { name: 'Enter Recommended By' }).fill('CEO');
+  await page.getByRole('paragraph').filter({ hasText: /^$/ }).nth(1).click();
+  await page.locator('.ql-editor').first().fill('Test Goal');
+  await page.getByRole('paragraph').filter({ hasText: /^$/ }).nth(1).click();
+  await page.locator('.ql-editor.ql-blank').first().fill('Test Background');
+  await page.getByRole('paragraph').filter({ hasText: /^$/ }).nth(1).click();
+  await page.locator('.ql-editor.ql-blank').first().fill('Test Regulatory Framework');
+  await page.getByRole('paragraph').filter({ hasText: /^$/ }).nth(1).click();
+  await page.locator('.ql-editor.ql-blank').first().fill('Test assessment');
+  await page.locator('.ql-editor.ql-blank').click();
+  await page.locator('.ql-editor.ql-blank').fill('Test recommendation');
+  await page.getByRole('textbox', { name: 'Enter annexure title' }).click();
+  await page.getByRole('textbox', { name: 'Enter annexure title' }).fill('Annexure 1');
   await page.getByRole('button', { name: 'Preview' }).click();
-  await page.waitForTimeout(3000);
   await page.getByRole('button', { name: 'Confirm' }).click();
+
   await page.waitForURL(/licenses\/.*\/pdf-view\/11/);
   await page.getByRole('button', { name: 'Submit' }).click();
   await page.getByRole('button', { name: 'OK' }).click();
-
-// Generate Memo
-  await page
-    .locator('.expanded-content')
-    .locator('i.expand-btn')
-    .first()
-    .click();
-  const SixthPendingRow = page
-    .locator('app-table-card')
-
-  await SixthPendingRow
-    .locator('i.icon-border.bi-chevron-down') .nth(5)
-    .click();
-
-  // Click View
-  await page.getByRole('button', { name: 'View' }).click();
-
-  await page.getByRole('textbox', { name: 'Enter Receiver' }).click();
-  await page.getByRole('textbox', { name: 'Enter Receiver' }).fill('Reciever ');
-  await page.getByRole('textbox', { name: 'Enter Sender' }).click();
-  await page.getByRole('textbox', { name: 'Enter Sender' }).fill('Sender');
-  await page.getByRole('textbox', { name: 'Enter Through' }).click();
-  await page.getByRole('textbox', { name: 'Enter Through' }).fill('Mail');
-  await page.locator('date-picker i').click();
-  await page.getByLabel('Saturday, January 31,').getByText('31').click();
-  await page.getByRole('textbox', { name: 'Enter Subject...' }).click();
-  await page.getByRole('textbox', { name: 'Enter Subject...' }).fill('Test Subject');
-  await page.locator('#editor-container').getByRole('paragraph').filter({ hasText: /^$/ }).click();
-  await page.locator('.ql-editor').fill('Test');
-  await page.getByRole('textbox', { name: 'Name' }).click();
-  await page.getByRole('textbox', { name: 'Name' }).fill('Annexure Test');
-  await page.waitForTimeout(3000);
-  await page.getByRole('button', { name: 'Preview' }).click();
-  await page.waitForTimeout(3000);
-  await page.getByRole('button', { name: 'Confirm' }).click();
-  await page.waitForURL(/licenses\/.*\/pdf-view\/13/);
-  await page.getByRole('button', { name: 'Submit' }).click();
-  await page.getByRole('button', { name: 'OK' }).click();
   await page.getByRole('button', { name: 'Sign Out' }).click();
   await page.getByRole('button', { name: 'Sign Out' }).click();
 
-// Log in as cluster head
+// Log as cluster head
   await page.getByRole('textbox', { name: 'Email' }).click();
   await page.getByRole('textbox', { name: 'Email' }).fill('clusterhead1@mailinator.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
   await page.getByRole('textbox', { name: 'Password' }).fill('Test@123');
   await page.getByRole('button', { name: 'Log In' }).click();
 
-// Navigate to licenses and approve Memo and Memo Attachment
+// Navigate to licenses and approve commission paper
   await page.getByRole('button', { name: 'Licenses' }).click();
   await page
     .locator('.expanded-content')
     .locator('i.expand-btn')
-    .first()
-    .click();
-  const SeventhPendingRow = page
-    .locator('app-table-card')
-
-  await SeventhPendingRow
-    .locator('i.icon-border.bi-chevron-down') .nth(6)
+    .nth(1)
     .click();
 
-  // Click View
-  await page.getByRole('button', { name: 'View' }).click();
-  await page.getByRole('button', { name: 'Approve' }).click();
-  await page.getByRole('button', { name: 'Validate' }).click();
-  await page.getByRole('button', { name: 'OK' }).click();
-  await page
-    .locator('.expanded-content')
-    .locator('i.expand-btn')
-    .first()
-    .click();
-  const EightthPendingRow = page
-    .locator('app-table-card')
+  const sixthPendingRow = page
+    .locator('app-table-card') 
 
-  await EightthPendingRow
-    .locator('i.icon-border.bi-chevron-down') .nth(7)
+  await sixthPendingRow
+    .locator('i.icon-border.bi-chevron-down') .nth(5)
     .click();
 
-  // Click View
   await page.getByRole('button', { name: 'View' }).click();
   await page.getByRole('button', { name: 'Approve' }).click();
   await page.getByRole('button', { name: 'Validate' }).click();
@@ -317,45 +211,28 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   await page.getByRole('button', { name: 'Sign Out' }).click();
   await page.getByRole('button', { name: 'Sign Out' }).click();
 
-// Log in as director
+// Log as director
   await page.getByRole('textbox', { name: 'Email' }).click();
   await page.getByRole('textbox', { name: 'Email' }).fill('director1@mailinator.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
   await page.getByRole('textbox', { name: 'Password' }).fill('Test@123');
   await page.getByRole('button', { name: 'Log In' }).click();
 
-// Navigate to licenses and approve Memo and Memo Attachment
+// Navigate to licenses and approve commission paper
   await page.getByRole('button', { name: 'Licenses' }).click();
   await page
     .locator('.expanded-content')
     .locator('i.expand-btn')
-    .first()
-    .click();
-  const NinethPendingRow = page
-    .locator('app-table-card')
-
-  await NinethPendingRow
-    .locator('i.icon-border.bi-chevron-down') .nth(8)
+    .nth(1)
     .click();
 
-  // Click View
-  await page.getByRole('button', { name: 'View' }).click();
-  await page.getByRole('button', { name: 'Approve' }).click();
-  await page.getByRole('button', { name: 'Validate' }).click();
-  await page.getByRole('button', { name: 'OK' }).click();
-  await page
-    .locator('.expanded-content')
-    .locator('i.expand-btn')
-    .first()
-    .click();
-  const TenthPendingRow = page
-    .locator('app-table-card')
+  const seventhPendingRow = page
+    .locator('app-table-card') 
 
-  await TenthPendingRow
-    .locator('i.icon-border.bi-chevron-down') .nth(9)
+  await seventhPendingRow
+    .locator('i.icon-border.bi-chevron-down') .nth(6)
     .click();
 
-  // Click View
   await page.getByRole('button', { name: 'View' }).click();
   await page.getByRole('button', { name: 'Approve' }).click();
   await page.getByRole('button', { name: 'Validate' }).click();
@@ -363,134 +240,123 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   await page.getByRole('button', { name: 'Sign Out' }).click();
   await page.getByRole('button', { name: 'Sign Out' }).click();
 
-// Log in as data validator
+// Log as data validator 
   await page.getByRole('textbox', { name: 'Email' }).click();
   await page.getByRole('textbox', { name: 'Email' }).fill('datavalidator1@mailinator.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
   await page.getByRole('textbox', { name: 'Password' }).fill('Test@123');
   await page.getByRole('button', { name: 'Log In' }).click();
 
-// Navigate to licenses and upload signed Memo and Memo Attachment
+// Navigate to licenses and upload signed commission paper
   await page.getByRole('button', { name: 'Licenses' }).click();
   await page
     .locator('.expanded-content')
     .locator('i.expand-btn')
-    .first()
+    .nth(1)
     .click();
+
+  const eightPendingRow = page
+    .locator('app-table-card') 
+
+  await eightPendingRow
+    .locator('i.icon-border.bi-chevron-down') .nth(7)
+    .click();
+
+  await page.getByRole('button', { name: 'View' }).click();
+
+// Upload signed commission paper
+
+  const filePath = 'C:/Users/MSI/Downloads/postman.jpg';
+
+  await page.getByRole('img', { name: 'Upload Icon' }).click();
+  await page.locator('input[type="file"]').nth(0).setInputFiles(filePath);  
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByRole('button', { name: 'OK' }).click();
+
+  await page
+    .locator('.expanded-content')
+    .locator('i.expand-btn')
+    .nth(1)
+    .click();
+
+  const ninethPendingRow = page
+    .locator('app-table-card') 
+
+  await ninethPendingRow
+    .locator('i.icon-border.bi-chevron-down') .nth(8)
+    .click();
+
+  await page.getByRole('button', { name: 'View' }).click();
+
+// Upload signed commission dicision paper
+  await page.getByRole('img', { name: 'Upload Icon' }).click();
+  await page.locator('input[type="file"]').nth(0).setInputFiles(filePath);
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByRole('button', { name: 'OK' }).click();
+
+  await page
+    .locator('.expanded-content')
+    .locator('i.expand-btn')
+    .nth(1)
+    .click();
+
+  const tenthPendingRow = page
+    .locator('app-table-card') 
+
+  await tenthPendingRow
+    .locator('i.icon-border.bi-chevron-down') .nth(9)
+    .click();
+
+  await page.getByRole('button', { name: 'View' }).click();
+
+// Generate cover letter
+  await page.getByRole('textbox', { name: 'Name of chairman' }).click();
+  await page.getByRole('textbox', { name: 'Name of chairman' }).fill('Sasindu Rashmika');
+  await page.getByRole('textbox', { name: 'Enter Designation' }).click();
+  await page.getByRole('textbox', { name: 'Enter Designation' }).fill('Director');
+  await page.getByRole('textbox', { name: 'Enter Address of Company' }).click();
+  await page.getByRole('textbox', { name: 'Enter Address of Company' }).fill('Battaramulla, Wadduwa');
+  await page.getByRole('textbox', { name: 'Enter the Subject' }).click();
+  await page.getByRole('textbox', { name: 'Enter the Subject' }).fill('Test Subject');
+  await page.getByRole('paragraph').filter({ hasText: /^$/ }).nth(1).click();
+  await page.locator('.ql-editor').first().fill('Test Body');
+  await page.getByRole('paragraph').filter({ hasText: /^$/ }).nth(1).click();
+  await page.locator('.ql-editor.ql-blank').fill('Test Header');
+  await page.getByRole('textbox', { name: 'Enter Objective' }).click();
+  await page.getByRole('textbox', { name: 'Enter Objective' }).fill('Objective 1');
+  await page.getByRole('button', { name: 'Preview' }).click();
+  await page.getByRole('button', { name: 'Confirm' }).click();
+
+  await page.waitForURL(/licenses\/.*\/pdf-view\/17/);
+  await page.getByRole('button', { name: 'Submit' }).click();
+  await page.getByRole('button', { name: 'OK' }).click();
+  await page.getByRole('button', { name: 'Sign Out' }).click();
+  await page.getByRole('button', { name: 'Sign Out' }).click();
+
+// Log as cluster head
+  await page.getByRole('textbox', { name: 'Email' }).click();
+  await page.getByRole('textbox', { name: 'Email' }).fill('clusterhead1@mailinator.com');
+  await page.getByRole('textbox', { name: 'Password' }).click();
+  await page.getByRole('textbox', { name: 'Password' }).fill('Test@123');
+  await page.getByRole('button', { name: 'Log In' }).click();
+
+// Navigate to licenses and approve cover letter
+  await page.getByRole('button', { name: 'Licenses' }).click();
+  await page
+    .locator('.expanded-content')
+    .locator('i.expand-btn')
+    .nth(1)
+    .click();
+
   const eleventhPendingRow = page
-    .locator('app-table-card')
+    .locator('app-table-card') 
 
   await eleventhPendingRow
     .locator('i.icon-border.bi-chevron-down') .nth(10)
     .click();
 
-  // Click View
-  await page.getByRole('button', { name: 'View' }).click();
-
-  const filePath = 'C:/Users/MSI/Downloads/postman.jpg';
-
-  // First upload
-  await page.getByRole('img', { name: 'Upload Icon' }).nth(0).click();
-  await page.locator('input[type="file"]').nth(0).setInputFiles(filePath);
-
-  // Second upload
-  await page.getByRole('img', { name: 'Upload Icon' }).nth(1).click();
-  await page.locator('input[type="file"]').nth(1).setInputFiles(filePath);
-
-  await page.getByRole('button', { name: 'Submit' }).click();
-  await page.waitForTimeout(2000);
-  await page.getByRole('button', { name: 'Submit' }).click();
-  await page.getByRole('button', { name: 'OK' }).click();
-
-// Upload acknowledgement letter
-  await page
-    .locator('.expanded-content')
-    .locator('i.expand-btn')
-    .first()
-    .click();
-  const tuwelthPendingRow = page
-    .locator('app-table-card')
-
-  await tuwelthPendingRow
-    .locator('i.icon-border.bi-chevron-down') .nth(11)
-    .click();
-
-  // Click View
-  await page.getByRole('button', { name: 'View' }).click();
-  // First upload
-  await page.getByRole('img', { name: 'Upload Icon' }).nth(0).click();
-  await page.locator('input[type="file"]').nth(0).setInputFiles(filePath);
-
-  // Second upload
-  await page.getByRole('img', { name: 'Upload Icon' }).nth(1).click();
-  await page.locator('input[type="file"]').nth(1).setInputFiles(filePath);
-  await page.getByRole('button', { name: 'Submit' }).click();
-  await page.waitForTimeout(2000);
-  await page.getByRole('button', { name: 'Submit' }).click();
-  await page.getByRole('button', { name: 'OK' }).click();
-
-// Cover letter generation
-  await page
-    .locator('.expanded-content')
-    .locator('i.expand-btn')
-    .first()
-    .click();
-  const ThirteenthPendingRow = page
-    .locator('app-table-card')
-
-  await ThirteenthPendingRow
-    .locator('i.icon-border.bi-chevron-down') .nth(12)
-    .click();
-
-  await page.getByRole('button', { name: 'View' }).click();
-  await page.getByRole('textbox', { name: 'Name of chairman' }).click();
-  await page.getByRole('textbox', { name: 'Name of chairman' }).fill('Tester');
-  await page.getByRole('textbox', { name: 'Enter Designation' }).click();
-  await page.getByRole('textbox', { name: 'Enter Designation' }).fill('CEO');
-  await page.getByRole('textbox', { name: 'Enter Address of Company' }).click();
-  await page.getByRole('textbox', { name: 'Enter Address of Company' }).fill('Battaramulla, Colombo');
-  await page.getByRole('textbox', { name: 'Enter the Subject' }).click();
-  await page.getByRole('textbox', { name: 'Enter the Subject' }).fill('Test Subject');
-  await page.getByRole('paragraph').filter({ hasText: /^$/ }).nth(1).click();
-  await page.locator('.ql-editor').first().fill('Test Letter Body');
-  await page.locator('.ql-editor.ql-blank').click();
-  await page.locator('.ql-editor.ql-blank').fill('Test Header');
-  await page.getByRole('textbox', { name: 'Enter Objective' }).click();
-  await page.getByRole('textbox', { name: 'Enter Objective' }).fill('Objective 1');
-  await page.getByRole('button', { name: '+ Add Another Field' }).click();
-  await page.getByRole('row', { name: '2 ' }).getByPlaceholder('Enter Objective').click();
-  await page.getByRole('row', { name: '2 ' }).getByPlaceholder('Enter Objective').fill('Objective 2');
-  await page.waitForTimeout(3000);
-  await page.getByRole('button', { name: 'Preview' }).click();
-  await page.waitForTimeout(3000);
-  await page.getByRole('button', { name: 'Confirm' }).click();
-  await page.waitForURL(/licenses\/.*\/pdf-view\/21/);
-  await page.getByRole('button', { name: 'Submit' }).click();
-  await page.getByRole('button', { name: 'OK' }).click();
-  await page.getByRole('button', { name: 'Sign Out' }).click();
-  await page.getByRole('button', { name: 'Sign Out' }).click();
-
-// Log in as cluster head
-  await page.getByRole('textbox', { name: 'Email' }).click();
-  await page.getByRole('textbox', { name: 'Email' }).fill('clusterhead1@mailinator.com');
-  await page.getByRole('textbox', { name: 'Password' }).click();
-  await page.getByRole('textbox', { name: 'Password' }).fill('Test@123');
-  await page.getByRole('button', { name: 'Log In' }).click();
-
-// Navigate to licenses and approve cover letter
-  await page.getByRole('button', { name: 'Licenses' }).click();
-  await page
-    .locator('.expanded-content')
-    .locator('i.expand-btn')
-    .first()
-    .click();
-  const FourteenthPendingRow = page
-    .locator('app-table-card')
-
-  await FourteenthPendingRow
-    .locator('i.icon-border.bi-chevron-down') .nth(13)
-    .click();
-
   await page.getByRole('button', { name: 'View' }).click();
   await page.getByRole('button', { name: 'Approve' }).click();
   await page.getByRole('button', { name: 'Validate' }).click();
@@ -498,7 +364,7 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   await page.getByRole('button', { name: 'Sign Out' }).click();
   await page.getByRole('button', { name: 'Sign Out' }).click();
 
-// Log in as director
+// Log as director
   await page.getByRole('textbox', { name: 'Email' }).click();
   await page.getByRole('textbox', { name: 'Email' }).fill('director1@mailinator.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
@@ -510,13 +376,14 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   await page
     .locator('.expanded-content')
     .locator('i.expand-btn')
-    .first()
+    .nth(1)
     .click();
-  const fifteenthPendingRow = page
-    .locator('app-table-card')
 
-  await fifteenthPendingRow
-    .locator('i.icon-border.bi-chevron-down') .nth(14)
+  const twelethPendingRow = page
+    .locator('app-table-card') 
+
+  await twelethPendingRow
+    .locator('i.icon-border.bi-chevron-down') .nth(11)
     .click();
 
   await page.getByRole('button', { name: 'View' }).click();
@@ -526,7 +393,7 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   await page.getByRole('button', { name: 'Sign Out' }).click();
   await page.getByRole('button', { name: 'Sign Out' }).click();
 
-// Log in as data validator 
+// Log as data validator
   await page.getByRole('textbox', { name: 'Email' }).click();
   await page.getByRole('textbox', { name: 'Email' }).fill('datavalidator1@mailinator.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
@@ -538,26 +405,27 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   await page
     .locator('.expanded-content')
     .locator('i.expand-btn')
-    .first()
+    .nth(1)
     .click();
-  const SixteenthPendingRow = page
-    .locator('app-table-card')
 
-  await SixteenthPendingRow
-    .locator('i.icon-border.bi-chevron-down') .nth(15)
+  const thirteenthPendingRow = page
+    .locator('app-table-card') 
+
+  await thirteenthPendingRow
+    .locator('i.icon-border.bi-chevron-down') .nth(12)
     .click();
 
   await page.getByRole('button', { name: 'View' }).click();
-  
-  await page.getByRole('img', { name: 'Upload Icon' }).click();
+
+  // First upload
+  await page.getByRole('img', { name: 'Upload Icon' }).nth(0).click();
   await page.locator('input[type="file"]').nth(0).setInputFiles(filePath);
 
+  // Second upload
+  await page.getByRole('img', { name: 'Upload Icon' }).nth(1).click();
+  await page.locator('input[type="file"]').nth(1).setInputFiles(filePath);
+  
   await page.getByRole('button', { name: 'Submit' }).click();
-  await page.waitForTimeout(2000);
   await page.getByRole('button', { name: 'Submit' }).click();
   await page.getByRole('button', { name: 'OK' }).click();
 });
-
-function first() {
-  throw new Error('Function not implemented.');
-}

@@ -3,7 +3,7 @@ import { test, expect, Page } from '@playwright/test';
 test('Apply Investment Manager license with valid data', async ({ page }) => {
   
   // login
-  await page.goto('https://dev.sl.sec.corewatch.io/auth/entity/login');
+  await page.goto('https://dev-sl-sec.corewatch.io/auth/entity/login');
   await page.getByRole('textbox', { name: 'Email' }).click();
   await page.getByRole('textbox', { name: 'Email' }).fill('rash@mail.com');
   await page.getByRole('textbox', { name: 'Password' }).click();

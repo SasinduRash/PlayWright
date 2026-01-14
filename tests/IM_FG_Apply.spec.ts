@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test('test', async ({ page }) => {
 
 // Login
-  await page.goto('https://dev.sl.sec.corewatch.io/auth/entity/login');
+  await page.goto('https://dev-sl-sec.corewatch.io/auth/entity/login');
   await page.getByRole('textbox', { name: 'Email' }).click();
   await page.getByRole('textbox', { name: 'Email' }).fill('rash@mail.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
@@ -74,6 +74,7 @@ test('test', async ({ page }) => {
   await page.locator('section-card').filter({ hasText: 'Section BCertificate' }).getByPlaceholder('Enter Postal Code').fill('12560');
   await page.locator('section-card').filter({ hasText: 'Section BCertificate' }).getByRole('combobox').selectOption('Sri Lanka');
   await page.waitForTimeout(3000);
+  await page.locator('section-card').filter({ hasText: 'Section BCertificate' }).getByRole('combobox').selectOption('Sri Lanka');
   await page.getByRole('button', { name: 'Next' }).click();
 
 // Fill Page 2 Form
