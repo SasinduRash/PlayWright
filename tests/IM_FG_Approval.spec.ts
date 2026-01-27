@@ -174,7 +174,6 @@ test('test', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Enter annexure title' }).click();
   await page.getByRole('textbox', { name: 'Enter annexure title' }).fill('Annexure 1');
   await page.getByRole('button', { name: 'Preview' }).click();
-  await page.getByRole('button', { name: 'Confirm' }).click();
 
   await page.waitForURL(/licenses\/.*\/pdf-view\/11/);
   await page.getByRole('button', { name: 'Submit' }).click();
@@ -312,8 +311,8 @@ test('test', async ({ page }) => {
   await page.getByRole('button', { name: 'View' }).click();
 
 // Generate cover letter
-  await page.getByRole('textbox', { name: 'Name of chairman' }).click();
-  await page.getByRole('textbox', { name: 'Name of chairman' }).fill('Sasindu Rashmika');
+  await page.getByRole('textbox', { name: 'Enter Name' }).click();
+  await page.getByRole('textbox', { name: 'Enter Name' }).fill('Sasindu Rashmika');
   await page.getByRole('textbox', { name: 'Enter Designation' }).click();
   await page.getByRole('textbox', { name: 'Enter Designation' }).fill('Director');
   await page.getByRole('textbox', { name: 'Enter Address of Company' }).click();
@@ -327,7 +326,6 @@ test('test', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Enter Objective' }).click();
   await page.getByRole('textbox', { name: 'Enter Objective' }).fill('Objective 1');
   await page.getByRole('button', { name: 'Preview' }).click();
-  await page.getByRole('button', { name: 'Confirm' }).click();
 
   await page.waitForURL(/licenses\/.*\/pdf-view\/17/);
   await page.getByRole('button', { name: 'Submit' }).click();

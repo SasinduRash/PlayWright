@@ -225,8 +225,6 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   await page.locator('.ql-editor').fill('Test Content');
   await page.waitForTimeout(3000);
   await page.getByRole('button', { name: 'Preview' }).click();
-  await page.waitForTimeout(3000);
-  await page.getByRole('button', { name: 'Confirm' }).click();
   await page.waitForURL(/licenses\/.*\/pdf-view\/11/);
   await page.getByRole('button', { name: 'Submit' }).click();
   await page.getByRole('button', { name: 'OK' }).click();
@@ -263,8 +261,6 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Name' }).fill('Annexure Test');
   await page.waitForTimeout(3000);
   await page.getByRole('button', { name: 'Preview' }).click();
-  await page.waitForTimeout(3000);
-  await page.getByRole('button', { name: 'Confirm' }).click();
   await page.waitForURL(/licenses\/.*\/pdf-view\/13/);
   await page.getByRole('button', { name: 'Submit' }).click();
   await page.getByRole('button', { name: 'OK' }).click();
@@ -443,8 +439,8 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
     .click();
 
   await page.getByRole('button', { name: 'View' }).click();
-  await page.getByRole('textbox', { name: 'Name of chairman' }).click();
-  await page.getByRole('textbox', { name: 'Name of chairman' }).fill('Tester');
+  await page.getByRole('textbox', { name: 'Enter Name' }).click();
+  await page.getByRole('textbox', { name: 'Enter Name' }).fill('Tester');
   await page.getByRole('textbox', { name: 'Enter Designation' }).click();
   await page.getByRole('textbox', { name: 'Enter Designation' }).fill('CEO');
   await page.getByRole('textbox', { name: 'Enter Address of Company' }).click();
@@ -462,8 +458,6 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   await page.getByRole('row', { name: '2 ' }).getByPlaceholder('Enter Objective').fill('Objective 2');
   await page.waitForTimeout(3000);
   await page.getByRole('button', { name: 'Preview' }).click();
-  await page.waitForTimeout(3000);
-  await page.getByRole('button', { name: 'Confirm' }).click();
   await page.waitForURL(/licenses\/.*\/pdf-view\/21/);
   await page.getByRole('button', { name: 'Submit' }).click();
   await page.getByRole('button', { name: 'OK' }).click();
