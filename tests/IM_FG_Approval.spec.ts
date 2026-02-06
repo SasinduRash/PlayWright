@@ -265,7 +265,7 @@ test('test', async ({ page }) => {
 
 // Upload signed commission paper
 
-  const filePath = 'C:/Users/MSI/Downloads/postman.jpg';
+  const filePath = 'C:/Users/MSI/Downloads/Sample_Report.pdf';
 
   await page.getByRole('img', { name: 'Upload Icon' }).click();
   await page.locator('input[type="file"]').nth(0).setInputFiles(filePath);  
@@ -327,7 +327,7 @@ test('test', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Enter Objective' }).fill('Objective 1');
   await page.getByRole('button', { name: 'Preview' }).click();
 
-  await page.waitForURL(/licenses\/.*\/pdf-view\/17/);
+  await page.waitForURL(/licenses\/.*\/pdf-view\/18/);
   await page.getByRole('button', { name: 'Submit' }).click();
   await page.getByRole('button', { name: 'OK' }).click();
   await page.getByRole('button', { name: 'Sign Out' }).click();

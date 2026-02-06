@@ -5,7 +5,7 @@ test('Apply Investment Manager license with valid data', async ({ page }) => {
   // login
   await page.goto('https://dev-sl-sec.corewatch.io/auth/entity/login');
   await page.getByRole('textbox', { name: 'Email' }).click();
-  await page.getByRole('textbox', { name: 'Email' }).fill('rash@mail.com');
+  await page.getByRole('textbox', { name: 'Email' }).fill('taniya@gmail.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
   await page.getByRole('textbox', { name: 'Password' }).fill('Test123#');
   await page.getByRole('button', { name: 'Log In' }).click();
@@ -70,7 +70,7 @@ test('Apply Investment Manager license with valid data', async ({ page }) => {
   await page.locator('form-field-wrapper').filter({ hasText: 'Shareholders Funds' }).getByPlaceholder('0').click();
   await page.locator('form-field-wrapper').filter({ hasText: 'Shareholders Funds' }).getByPlaceholder('0').fill('75000000');
   await page.locator('date-picker i').click();
-  await page.getByLabel('Sunday, January 11,').getByText('11').click();
+  await page.getByLabel('Saturday, February 28,').getByText('28').click();
   await page.getByRole('button', { name: '+ Add Entry' }).click();
   await page.getByRole('textbox', { name: 'Holding Company' }).click();
   await page.getByRole('textbox', { name: 'Holding Company' }).fill('ABC 2');
@@ -110,16 +110,16 @@ test('Apply Investment Manager license with valid data', async ({ page }) => {
   await page.locator('input[type="file"]').nth(1)
     .setInputFiles(filePath);
 
-  await page.getByRole('radio', { name: 'No' }).check();
-  await page.getByRole('combobox').selectOption('Individual');
-  await page.getByRole('textbox', { name: 'Shareholder Name' }).click();
-  await page.getByRole('textbox', { name: 'Shareholder Name' }).fill('Person A');
-  await page.getByPlaceholder('No. of Shares').click();
-  await page.getByPlaceholder('No. of Shares').fill('100');
-  await page.getByRole('button', { name: 'Next' }).click();
-  await page.getByPlaceholder('No. of Shares').click();
-  await page.getByPlaceholder('Percentage of Shares Held').click();
-  await page.getByPlaceholder('Percentage of Shares Held').fill('100');
+  // await page.getByRole('radio', { name: 'No' }).check();
+  // await page.getByRole('combobox').selectOption('Individual');
+  // await page.getByRole('textbox', { name: 'Shareholder Name' }).click();
+  // await page.getByRole('textbox', { name: 'Shareholder Name' }).fill('Person A');
+  // await page.getByPlaceholder('No. of Shares').click();
+  // await page.getByPlaceholder('No. of Shares').fill('100');
+  // await page.getByRole('button', { name: 'Next' }).click();
+  // await page.getByPlaceholder('No. of Shares').click();
+  // await page.getByPlaceholder('Percentage of Shares Held').click();
+  // await page.getByPlaceholder('Percentage of Shares Held').fill('100');
   await page.waitForTimeout(2000);
   await page.getByRole('button', { name: 'Next' }).click();
 

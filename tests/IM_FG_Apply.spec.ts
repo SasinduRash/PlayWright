@@ -5,7 +5,7 @@ test('test', async ({ page }) => {
 // Login
   await page.goto('https://dev-sl-sec.corewatch.io/auth/entity/login');
   await page.getByRole('textbox', { name: 'Email' }).click();
-  await page.getByRole('textbox', { name: 'Email' }).fill('rash@mail.com');
+  await page.getByRole('textbox', { name: 'Email' }).fill('taniya@gmail.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
   await page.getByRole('textbox', { name: 'Password' }).fill('Test123#');
   await page.getByRole('button', { name: 'Log In' }).click();
@@ -61,7 +61,7 @@ test('test', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Enter Phone Number' }).click();
   await page.getByRole('textbox', { name: 'Enter Phone Number' }).fill('716789077');
   await page.locator('date-picker i').click();
-  await page.getByLabel('Thursday, January 8,').getByText('8').click();
+  await page.getByLabel('Saturday, February 28,').getByText('28').click();
   await page.getByRole('textbox', { name: 'Organization Name' }).click();
   await page.getByRole('textbox', { name: 'Organization Name' }).fill('ABC Company (Pvt) Ltd');
   await page.locator('section-card').filter({ hasText: 'Section BCertificate' }).getByPlaceholder('Enter Address Line 1').click();
@@ -84,7 +84,7 @@ test('test', async ({ page }) => {
   await page.getByRole('textbox', { name: 'NIC/Passport No.' }).fill('2001200021V');
   await page.getByRole('cell', { name: 'Select Designation' }).getByRole('combobox').selectOption('CEO');
   await page.locator('date-picker i').click();
-  await page.getByLabel('Thursday, January 1,').getByText('1', { exact: true }).click();
+  await page.getByLabel('Saturday, February 28,').getByText('28', { exact: true }).click();
 
   const filePath = 'C:/Users/MSI/Downloads/postman.jpg';
 
@@ -98,7 +98,7 @@ test('test', async ({ page }) => {
   await page.getByRole('row', { name: '2 Kavindu Sandeepa NIC Select' }).getByPlaceholder('NIC/Passport No.').fill('32000210202');
   await page.getByRole('cell', { name: 'Select Designation' }).getByRole('combobox').selectOption('Director');
   await page.locator('.ng-untouched.ng-pristine > .custom-date-picker > .form-icon-group > .bi').click();
-  await page.getByLabel('Thursday, January 1,').getByText('1', { exact: true }).click();
+  await page.getByLabel('Saturday, February 28,').getByText('28', { exact: true }).click();
 
   await page.getByText('Attach File').click();
   await page.locator('input[type="file"]').nth(1).setInputFiles(filePath);

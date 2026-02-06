@@ -5,9 +5,9 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
 // Log as cluster 4 data validator
   await page.goto('https://dev-sl-sec.corewatch.io/bypass/int-login');
   await page.getByRole('textbox', { name: 'Email' }).click();
-  await page.getByRole('textbox', { name: 'Email' }).fill('cluster4.dv@mailinator.com');
+  await page.getByRole('textbox', { name: 'Email' }).fill('c4datavalidator@mailinator.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
-  await page.getByRole('textbox', { name: 'Password' }).fill('Test@123');
+  await page.getByRole('textbox', { name: 'Password' }).fill('Test@user9');
   await page.getByRole('button', { name: 'Log In' }).click();
 
 // Navigate to licenses and mark as checked
@@ -383,7 +383,7 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   // Click View
   await page.getByRole('button', { name: 'View' }).click();
 
-  const filePath = 'C:/Users/MSI/Downloads/postman.jpg';
+  const filePath = 'C:/Users/MSI/Downloads/Sample_Report.pdf';
 
   // First upload
   await page.getByRole('img', { name: 'Upload Icon' }).nth(0).click();
