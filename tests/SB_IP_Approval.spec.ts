@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 
-test('Approve In Principal Investment Manager license ', async ({ page }) => {
+test('Approve In Principal Stock Broker license ', async ({ page }) => {
 
 // Log as cluster 4 data validator
   await page.goto('https://dev-sl-sec.corewatch.io/bypass/int-login');

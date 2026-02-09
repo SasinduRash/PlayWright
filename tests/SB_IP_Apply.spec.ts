@@ -1,6 +1,6 @@
 import { test, expect, Page } from '@playwright/test';
 
-test('Apply Stock Dealer license with valid data', async ({ page }) => {
+test('Apply Stock Broker license with valid data', async ({ page }) => {
   
   // login
   await page.goto('https://dev-sl-sec.corewatch.io/auth/entity/login');
