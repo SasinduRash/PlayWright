@@ -5,9 +5,9 @@ test('Apply Corporate Finance Advisor license with valid data', async ({ page })
   // login
   await page.goto('https://dev-sl-sec.corewatch.io/auth/entity/login');
   await page.getByRole('textbox', { name: 'Email' }).click();
-  await page.getByRole('textbox', { name: 'Email' }).fill('taniya@gmail.com');
+  await page.getByRole('textbox', { name: 'Email' }).fill('primetrust@mailinator.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
-  await page.getByRole('textbox', { name: 'Password' }).fill('Test123#');
+  await page.getByRole('textbox', { name: 'Password' }).fill('Test@123');
   await page.getByRole('button', { name: 'Log In' }).click();
 
   // navigate to license application
