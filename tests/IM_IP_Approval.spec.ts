@@ -34,16 +34,16 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   await page.getByRole('button', { name: 'Next' }).click();
   await page.getByRole('button', { name: 'Next' }).click();
   await page.getByRole('button', { name: 'Next' }).click();
-  await page.getByRole('button').filter({ hasText: /^$/ }).nth(2).click();
+  await page.getByRole('button').filter({ hasText: /^$/ }).nth(1).click();
   await page.getByRole('button', { name: 'Mark as Checked' }).click();
   await page.getByRole('button', { name: 'Sign Out' }).click();
   await page.getByRole('button', { name: 'Sign Out' }).click();
 
 // Log as cluster 3 data validator
   await page.getByRole('textbox', { name: 'Email' }).click();
-  await page.getByRole('textbox', { name: 'Email' }).fill('cluster3.dv@mailinator.com');
+  await page.getByRole('textbox', { name: 'Email' }).fill('c3datavalidator@mailinator.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
-  await page.getByRole('textbox', { name: 'Password' }).fill('Test@123');
+  await page.getByRole('textbox', { name: 'Password' }).fill('Test@user9');
   await page.getByRole('button', { name: 'Log In' }).click();
 
 // Navigate to licenses and mark as checked
@@ -65,9 +65,9 @@ test('Approve In Principal Investment Manager license ', async ({ page }) => {
   await page.getByRole('button', { name: 'Next' }).click();
   await page.getByRole('button', { name: 'Next' }).click();
   await page.getByRole('button', { name: 'Next' }).click();
-  await page.locator('.col-12.col-md-12 > form-field > .field-data-filled > .vstack > .grey-600-text.f-13 > json-form-element-options > .options-wrapper > div:nth-child(2) > .icon-button')  .click();
+  await page.getByRole('button').filter({ hasText: /^$/ }).nth(5).click();
   await page.getByRole('button', { name: 'Mark as Checked' }).click();
-  await page.locator('div:nth-child(2) > form-field > .field-data-filled > .vstack > .grey-600-text.f-13 > json-form-element-options > .options-wrapper > div:nth-child(2) > .icon-button') .click();
+  await page.locator('div:nth-child(7) > subsection > .hstack.p-4 > .vstack > .hstack > json-form-element-options > .options-wrapper > div:nth-child(2) > .icon-button').click();
   await page.getByRole('button', { name: 'Mark as Checked' }).click();
   await page.getByRole('button', { name: 'Sign Out' }).click();
   await page.getByRole('button', { name: 'Sign Out' }).click();

@@ -45,13 +45,13 @@ test('Apply Investment Manager license with valid data', async ({ page }) => {
   await page.locator('section-card').filter({ hasText: 'Section AGeneral' }).getByPlaceholder('Enter Postal Code').fill('12560');
   await page.locator('section-card').filter({ hasText: 'Section AGeneral' }).getByRole('combobox').selectOption('Sri Lanka');
   await page.locator('section-card').filter({ hasText: 'Section AGeneral' }).getByPlaceholder('Enter Name').click();
-  await page.locator('section-card').filter({ hasText: 'Section AGeneral' }).getByPlaceholder('Enter Name').fill('Tester');
+  await page.locator('section-card').filter({ hasText: 'Section AGeneral' }).getByPlaceholder('Enter Name').fill('John Doe');
   await page.getByRole('textbox', { name: 'Enter Designation' }).click();
-  await page.getByRole('textbox', { name: 'Enter Designation' }).fill('CEO');
+  await page.getByRole('textbox', { name: 'Enter Designation' }).fill('Director');
   await page.locator('subsection').filter({ hasText: 'Contact Person Information' }).getByPlaceholder('Enter Email Address').click();
-  await page.locator('subsection').filter({ hasText: 'Contact Person Information' }).getByPlaceholder('Enter Email Address').fill('test@mail.com');
+  await page.locator('subsection').filter({ hasText: 'Contact Person Information' }).getByPlaceholder('Enter Email Address').fill('abccom@mail.com');
   await page.getByRole('textbox', { name: 'Enter Phone Number' }).click();
-  await page.getByRole('textbox', { name: 'Enter Phone Number' }).fill('71564789');
+  await page.getByRole('textbox', { name: 'Enter Phone Number' }).fill('71564780');
   await page.getByRole('textbox', { name: 'Enter Organization Name' }).click();
   await page.getByRole('textbox', { name: 'Enter Organization Name' }).fill('ABC Com');
   await page.locator('section-card').filter({ hasText: 'Section BCertificate' }).getByPlaceholder('Enter Address Line 1').click();
@@ -195,19 +195,12 @@ test('Apply Investment Manager license with valid data', async ({ page }) => {
   await page.getByRole('button', { name: 'Next' }).click();
 
   // Page 5
-  await page.locator('form-field-wrapper').filter({ hasText: 'Memorandum/ Articles of' }).locator('img').click();
-  const fileInput2 = page.locator('input[type="file"]').nth(0);
-  await fileInput2.setInputFiles(filePath);
-  await page.locator('input[type="file"]').nth(1)
-    .setInputFiles(filePath);
   await page.getByRole('textbox', { name: 'Regulator' }).click();
-  await page.getByRole('textbox', { name: 'Regulator' }).fill('ABC');
+  await page.getByRole('textbox', { name: 'Regulator' }).fill('Regulator A');
   await page.getByRole('textbox', { name: 'Regulated Activity' }).click();
-  await page.getByRole('textbox', { name: 'Regulated Activity' }).fill('Test');
+  await page.getByRole('textbox', { name: 'Regulated Activity' }).fill('Activity 1');
   await page.getByRole('textbox', { name: 'Business Name' }).click();
-  await page.getByRole('textbox', { name: 'Business Name' }).fill('ABC');
-  await page.getByRole('textbox', { name: 'Nature of the Business' }).click();
-  await page.getByRole('textbox', { name: 'Nature of the Business' }).fill('Test');
+  await page.getByRole('textbox', { name: 'Business Name' }).fill('Sakura Pvt Ltd');
 
 
   async function uploadDocument(
@@ -230,11 +223,11 @@ test('Apply Investment Manager license with valid data', async ({ page }) => {
     await fileInput.setInputFiles(filePath);
   }
 
-  await uploadDocument(page, 'Business Model Documentation', filePath);
-  await uploadDocument(page, "Applicant's Declaration", filePath);
-  await uploadDocument(page, 'Internal Compliance Manual', filePath);
-  await uploadDocument(page, 'Documentation in support of measures taken', filePath);
-  await uploadDocument(page, 'Documentation in Support of Steps Taken', filePath);
+  const uploads = page.getByLabel(/upload document/i);
+
+    for (let i = 0; i < await uploads.count(); i++) {
+    await uploads.nth(i).setInputFiles(filePath);
+  }
 
   await page.waitForTimeout(2000); 
   await page.getByRole('button', { name: 'Submit' }).click();
