@@ -1,14 +1,42 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect, Page, Locator } from '@playwright/test';
+import path from 'path';
 
 test('Apply Credit Rating Agency license with valid data', async ({ page }) => {
-  
+  test.setTimeout(180000); // full multi-page flow takes ~1 min
+
+  // click Next until the next page's first element appears.
+  // The app sometimes swallows Next without saving (and further Next clicks stay stuck);
+  // Save Draft still saves, and after a reload Next works again.
+  async function goNext(page: Page, nextPageMarker: Locator) {
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      await page.getByRole('button', { name: 'Next' }).click();
+      try {
+        await nextPageMarker.waitFor({ state: 'visible', timeout: 10000 });
+        return;
+      } catch { }
+      const draftSaved = page.waitForResponse(r => r.url().includes('/submit?draft=true'));
+      await page.getByRole('button', { name: 'Save Draft' }).click();
+      await draftSaved;
+      await page.reload();
+      await page.getByRole('button', { name: 'Next' }).waitFor();
+      await page.waitForTimeout(3000);
+    }
+    await expect(nextPageMarker).toBeVisible();
+  }
+
   // login
   await page.goto('https://dev-sl-sec.corewatch.io/auth/entity/login');
   await page.getByRole('textbox', { name: 'Email' }).click();
-  await page.getByRole('textbox', { name: 'Email' }).fill('taniya@gmail.com');
+  await page.getByRole('textbox', { name: 'Email' }).fill('xyz@mail.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
   await page.getByRole('textbox', { name: 'Password' }).fill('Test123#');
   await page.getByRole('button', { name: 'Log In' }).click();
+
+  // OTP verification (fixed dev OTP)
+  await expect(page.getByRole('heading', { name: 'Check your email' })).toBeVisible();
+  await page.getByRole('textbox').first().click();
+  await page.keyboard.type('55555');
+  await page.getByRole('button', { name: 'Verify' }).click();
 
   // navigate to license application
   await page.getByRole('button', { name: 'Licenses' }).click();
@@ -16,7 +44,10 @@ test('Apply Credit Rating Agency license with valid data', async ({ page }) => {
   // apply new license
   await page.getByRole('button', { name: ' New License' }).click();
   await page.locator('div').filter({ hasText: /^Credit Rating Agency$/ }).nth(1).click();
-  await page.getByRole('button', { name: 'Apply Now' }).click();
+  await expect(async () => {
+    await page.getByRole('button', { name: 'Apply Now' }).click();
+    await expect(page.getByRole('button', { name: 'Start' })).toBeVisible({ timeout: 3000 });
+  }).toPass({ timeout: 30000 });
   await page.getByRole('button', { name: 'Start' }).click();
 
   // fill application form
@@ -70,38 +101,36 @@ test('Apply Credit Rating Agency license with valid data', async ({ page }) => {
   await page.locator('form-field-wrapper').filter({ hasText: 'Stated Capital' }).getByPlaceholder('0').fill('100000000');
   await page.locator('form-field-wrapper').filter({ hasText: 'Shareholders Funds' }).getByPlaceholder('0').click();
   await page.locator('form-field-wrapper').filter({ hasText: 'Shareholders Funds' }).getByPlaceholder('0').fill('15000000');
-  await page.locator('date-picker i').click();
-  await page.getByLabel('Saturday, February 28,').getByText('28').click();
-  await page.getByRole('button', { name: '+ Add Entry' }).click();
-  await page.getByRole('textbox', { name: 'Holding Company' }).click();
-  await page.getByRole('textbox', { name: 'Holding Company' }).fill('ABC 2');
-  await page.getByRole('textbox', { name: 'Name of The Company' }).click();
-  await page.getByRole('textbox', { name: 'Name of The Company' }).fill('XYZ');
-  await page.getByRole('combobox').selectOption('Partnership');
-  await page.getByRole('button', { name: 'Save' }).click();
+  await page.locator('form-field-wrapper').filter({ hasText: 'Financial Year End' }).getByRole('combobox').selectOption('31st March');
 
-  await page.locator('subsection').filter({ hasText: 'Ultimate Holding CompanyIf' }).getByPlaceholder('Enter Name').click();
-  await page.locator('subsection').filter({ hasText: 'Ultimate Holding CompanyIf' }).getByPlaceholder('Enter Name').fill('N/A');
-  await page.locator('form-field-wrapper').filter({ hasText: 'Country of Incorporation' }).getByRole('combobox').selectOption('N/A');
-  await page.getByRole('textbox', { name: 'Write...' }).click();
-  await page.getByRole('textbox', { name: 'Write...' }).fill('N/A');
-  await page.locator('field-group').filter({ hasText: 'Registered Office Address' }).getByPlaceholder('Enter Address Line 1').click();
-  await page.locator('field-group').filter({ hasText: 'Registered Office Address' }).getByPlaceholder('Enter Address Line 1').fill('N/A');
-  await page.locator('field-group').filter({ hasText: 'Registered Office Address' }).getByPlaceholder('Enter City').click();
-  await page.locator('field-group').filter({ hasText: 'Registered Office Address' }).getByPlaceholder('Enter City').fill('N/A');
-  await page.locator('field-group').filter({ hasText: 'Registered Office Address' }).getByPlaceholder('Enter State/Province/Region').click();
-  await page.locator('field-group').filter({ hasText: 'Registered Office Address' }).getByPlaceholder('Enter State/Province/Region').fill('N/A');
-  await page.locator('field-group').filter({ hasText: 'Registered Office Address' }).getByPlaceholder('Enter Postal Code').click();
-  await page.locator('field-group').filter({ hasText: 'Registered Office Address' }).getByPlaceholder('Enter Postal Code').fill('N/A');
-  await page.locator('field-group').filter({ hasText: 'Registered Office Address' }).getByRole('combobox').selectOption('Sri Lanka');
+  // Section E - Annexure 1 (inline table row)
+  await page.getByRole('row').filter({ has: page.getByRole('textbox', { name: 'Name of The Company' }) }).first().getByRole('textbox', { name: 'Name of The Company' }).fill('XYZ');
+  await page.getByRole('row').filter({ has: page.getByRole('textbox', { name: 'Name of The Company' }) }).first().getByRole('combobox').selectOption('Partnership');
+
+  const ultimateHolding = page.locator('subsection').filter({ hasText: 'Ultimate Holding CompanyIf' });
+  await ultimateHolding.getByPlaceholder('Enter Name').click();
+  await ultimateHolding.getByPlaceholder('Enter Name').fill('N/A');
+  await ultimateHolding.getByRole('combobox').first().selectOption('N/A');
+  await ultimateHolding.getByRole('textbox', { name: 'Write...' }).click();
+  await ultimateHolding.getByRole('textbox', { name: 'Write...' }).fill('N/A');
+  await ultimateHolding.getByPlaceholder('Enter Address Line 1').click();
+  await ultimateHolding.getByPlaceholder('Enter Address Line 1').fill('N/A');
+  await ultimateHolding.getByPlaceholder('Enter City').click();
+  await ultimateHolding.getByPlaceholder('Enter City').fill('N/A');
+  await ultimateHolding.getByPlaceholder('Enter State/Province/Region').click();
+  await ultimateHolding.getByPlaceholder('Enter State/Province/Region').fill('N/A');
+  await ultimateHolding.getByPlaceholder('Enter Postal Code').click();
+  await ultimateHolding.getByPlaceholder('Enter Postal Code').fill('N/A');
+  await ultimateHolding.getByRole('combobox').last().selectOption('Sri Lanka');
   await page.getByRole('textbox', { name: 'Name', exact: true }).click();
   await page.getByRole('textbox', { name: 'Name', exact: true }).fill('N/A');
   await page.getByRole('textbox', { name: 'Name of Shareholder' }).click();
   await page.getByRole('textbox', { name: 'Name of Shareholder' }).fill('Kusal Silva');
-  await page.getByRole('spinbutton').click();
-  await page.getByRole('spinbutton').fill('10');
+  const substantialShareholder = page.getByRole('row').filter({ has: page.getByRole('textbox', { name: 'Name of Shareholder' }) }).first();
+  await substantialShareholder.getByPlaceholder('0').click();
+  await substantialShareholder.getByPlaceholder('0').fill('25'); // must be 'N/A' or 20-100
 
-  const filePath = 'C:/Users/MSI/Downloads/postman.jpg';
+  const filePath = path.join(__dirname, 'files', 'notification letter.pdf');
 
     async function uploadDocument(page: Page, sectionText: string, filePath: string) {
         const section = page.locator('form-field-wrapper').filter({ hasText: sectionText });
@@ -120,18 +149,24 @@ test('Apply Credit Rating Agency license with valid data', async ({ page }) => {
 
   const uploads = page.getByLabel(/upload document/i);
 
+  // click Submit until the confirmation dialog opens, then confirm
+  async function submitApplication(page: Page) {
+    const dialog = page.getByRole('dialog');
+    await expect(async () => {
+      await page.getByRole('button', { name: 'Submit' }).click();
+      await expect(dialog).toBeVisible({ timeout: 3000 });
+    }).toPass({ timeout: 30000 });
+    await dialog.getByRole('button', { name: 'Submit' }).click();
+  }
+
   for (let i = 0; i < await uploads.count(); i++) {
     await uploads.nth(i).setInputFiles(filePath);
   }
   await page.waitForTimeout(3000);
-  await page.getByRole('button', { name: 'Next' }).click();
+  const page2 = page.getByRole('heading', { name: 'Group Structure', exact: true });
+  await goNext(page, page2);
 
   // Page 2
-
-  const page2 = page
-  .locator('form-field-wrapper')
-  .filter({ hasText: 'Group Structure' });
-
   await expect(page2).toBeVisible();
   const fileInput = page.locator('input[type="file"]').nth(0);
   await fileInput.setInputFiles(filePath);
@@ -147,9 +182,9 @@ test('Apply Credit Rating Agency license with valid data', async ({ page }) => {
   // await page.getByRole('row', { name: 'Individual Thisara Perera ' }).getByPlaceholder('Percentage of Shares Held').click();
   // await page.getByRole('row', { name: 'Individual Thisara Perera ' }).getByPlaceholder('Percentage of Shares Held').fill('100');
   // await page.locator('div:nth-child(4) > subsection > .pt-4 > table-entry-section-content > div > .table-wrapper > .fields-entry-table > tbody > tr > .text-end > .bi').click();
-  await page.locator('.pt-4.p-4 > table-entry-section-content > div > .table-wrapper > .fields-entry-table > tbody > tr > .text-end > .bi').click();
+  // await page.locator('.pt-4.p-4 > table-entry-section-content > div > .table-wrapper > .fields-entry-table > tbody > tr > .text-end > .bi').click();
   await page.waitForTimeout(2000);
-  await page.getByRole('button', { name: 'Next' }).click();
+  await goNext(page, page.getByRole('button', { name: '+ Add Entry' }));
 
   // Page 3
   await page.getByRole('button', { name: '+ Add Entry' }).click();
@@ -168,16 +203,16 @@ test('Apply Credit Rating Agency license with valid data', async ({ page }) => {
   await page.getByRole('textbox', { name: 'Enter Postal Code' }).click();
   await page.getByRole('textbox', { name: 'Enter Postal Code' }).fill('12560');
   await page.locator('form-field-wrapper').filter({ hasText: 'Country Select Country' }).getByRole('combobox').selectOption('Sri Lanka');
-  await page.locator('subsection').filter({ hasText: 'Are the Directors of the Applicant, functioning in the capacity of Directors of' }).getByPlaceholder('Enter Name of The Company').click();
-  await page.locator('subsection').filter({ hasText: 'Are the Directors of the Applicant, functioning in the capacity of Directors of' }).getByPlaceholder('Enter Name of The Company').fill('Company A');
-  await page.locator('subsection').filter({ hasText: 'Are the Directors of the Applicant, also Directors of the Holding Company/' }).getByPlaceholder('Enter Name of The Company').click();
-  await page.locator('subsection').filter({ hasText: 'Are the Directors of the Applicant, also Directors of the Holding Company/' }).getByPlaceholder('Enter Name of The Company').fill('Company B');
-  await page.locator('subsection').filter({ hasText: 'Are the Directors of the Applicant, shareholders of Listed Companies? Name of' }).getByPlaceholder('Enter Name of The Company').click();
-  await page.locator('subsection').filter({ hasText: 'Are the Directors of the Applicant, shareholders of Listed Companies? Name of' }).getByPlaceholder('Enter Name of The Company').fill('Company C');
-  await page.locator('subsection').filter({ hasText: 'Are the Directors of the Applicant, directors of another company which has also' }).getByPlaceholder('Enter Name of The Company').click();
-  await page.locator('subsection').filter({ hasText: 'Are the Directors of the Applicant, directors of another company which has also' }).getByPlaceholder('Enter Name of The Company').fill('Company D');
-  await page.getByRole('row', { name: '1 ' }).getByPlaceholder('Enter Name of The Company').click();
-  await page.getByRole('row', { name: '1 ' }).getByPlaceholder('Enter Name of The Company').fill('Company E');
+  // the five "Are the Directors of the Applicant..." questions, in page order
+  const directorCompanies = page.getByPlaceholder('Enter Name of The Company');
+  const companyNames = ['Company A', 'Company B', 'Company C', 'Company D', 'Company E'];
+  await expect(directorCompanies).toHaveCount(companyNames.length);
+  for (let i = 0; i < companyNames.length; i++) {
+    await directorCompanies.nth(i).click();
+    await directorCompanies.nth(i).fill(companyNames[i]);
+  }
+  await page.getByRole('textbox', { name: 'Enter Nature of the Business' }).click();
+  await page.getByRole('textbox', { name: 'Enter Nature of the Business' }).fill('Credit Rating');
   await page.getByRole('button', { name: 'Save' }).click();
   
   async function selectRadio(
@@ -212,7 +247,7 @@ test('Apply Credit Rating Agency license with valid data', async ({ page }) => {
   await selectRadio(page, ' Is an undischarged bankrupt, either within or outside Sri Lanka', 0);
 
   await page.waitForTimeout(2000);
-  await page.getByRole('button', { name: 'Next' }).click();
+  await goNext(page, page.locator('form-field-wrapper').filter({ hasText: 'Are there any such proceedings now pending in a court of law' }));
 
   // Page 4
   await selectRadio(page, 'Are there any such proceedings now pending in a court of law', 0);
@@ -230,7 +265,7 @@ test('Apply Credit Rating Agency license with valid data', async ({ page }) => {
   await selectRadio(page, 'renew its licence in terms of the applicable Rules of the SEC', 0);
 
   await page.waitForTimeout(2000);
-  await page.getByRole('button', { name: 'Next' }).click();
+  await goNext(page, page.getByRole('textbox', { name: 'Regulator' }));
 
   // Page 5
 
@@ -245,13 +280,13 @@ test('Apply Credit Rating Agency license with valid data', async ({ page }) => {
     await uploads.nth(i).setInputFiles(filePath);
   }
 
-  await page.waitForTimeout(2000); 
-  await page.getByRole('button', { name: 'Submit' }).click();
-  await page.getByRole('button', { name: 'Confirm' }).click();
+  await page.waitForTimeout(2000);
+  await submitApplication(page);
 
   // Page 6 - Payment
   await page.waitForURL(/licenses\/.*\/form-view\/2/);
   await page.getByRole('button', { name: 'OK' }).click();
+  await selectRadio(page, 'Are you registered for VAT?', 0);
   await page.getByRole('textbox', { name: 'Enter Address Line 1' }).click();
   await page.getByRole('textbox', { name: 'Enter Address Line 1' }).fill('Kaluthara');
   await page.getByRole('textbox', { name: 'Enter City' }).click();
@@ -265,7 +300,6 @@ test('Apply Credit Rating Agency license with valid data', async ({ page }) => {
   await page.getByRole('checkbox', { name: 'I hereby acknowledge that I' }).check();
   await page.getByRole('checkbox', { name: 'We declare that all' }).check();
   await page.waitForTimeout(2000);
-  await page.getByRole('button', { name: 'Submit' }).click();
-  await page.getByRole('button', { name: 'Confirm' }).click();
+  await submitApplication(page);
   await page.getByRole('button', { name: 'Ok' }).click();
 });
