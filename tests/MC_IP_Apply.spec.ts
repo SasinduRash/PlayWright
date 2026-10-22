@@ -1,14 +1,30 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect, Page, Locator } from '@playwright/test';
 
 test('Apply Managing Company license with valid data', async ({ page }) => {
+  test.setTimeout(180000); // full multi-page flow takes ~1 min
+
+  // click Next until the next page's first element appears (Next is sometimes ignored while the draft is saving)
+  async function goNext(page: Page, nextPageMarker: Locator) {
+    await expect(async () => {
+      await page.getByRole('button', { name: 'Next' }).click();
+      await expect(nextPageMarker).toBeVisible({ timeout: 5000 });
+    }).toPass({ timeout: 60000 });
+  }
+
   
   // login
   await page.goto('https://dev-sl-sec.corewatch.io/auth/entity/login');
   await page.getByRole('textbox', { name: 'Email' }).click();
-  await page.getByRole('textbox', { name: 'Email' }).fill('taniya@gmail.com');
+  await page.getByRole('textbox', { name: 'Email' }).fill('xyz@mail.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
   await page.getByRole('textbox', { name: 'Password' }).fill('Test123#');
   await page.getByRole('button', { name: 'Log In' }).click();
+
+  // OTP verification (fixed dev OTP)
+  await expect(page.getByRole('heading', { name: 'Check your email' })).toBeVisible();
+  await page.getByRole('textbox').first().click();
+  await page.keyboard.type('55555');
+  await page.getByRole('button', { name: 'Verify' }).click();
 
   // navigate to license application
   await page.getByRole('button', { name: 'Licenses' }).click();
@@ -69,31 +85,32 @@ test('Apply Managing Company license with valid data', async ({ page }) => {
   await page.locator('form-field-wrapper').filter({ hasText: 'Stated Capital' }).getByPlaceholder('0').fill('100000000');
   await page.locator('form-field-wrapper').filter({ hasText: 'Shareholders Funds' }).getByPlaceholder('0').click();
   await page.locator('form-field-wrapper').filter({ hasText: 'Shareholders Funds' }).getByPlaceholder('0').fill('75000000');
-  await page.locator('date-picker i').click();
-  await page.getByLabel('Saturday, February 28,').getByText('28').click();
-  await page.getByRole('button', { name: '+ Add Entry' }).click();
-  await page.getByRole('textbox', { name: 'Holding Company' }).click();
-  await page.getByRole('textbox', { name: 'Holding Company' }).fill('ABC 2');
-  await page.getByRole('textbox', { name: 'Name of The Company' }).click();
-  await page.getByRole('textbox', { name: 'Name of The Company' }).fill('XYZ');
-  await page.getByRole('combobox').selectOption('Partnership');
-  await page.getByRole('button', { name: 'Save' }).click();
-  await page.locator('subsection').filter({ hasText: 'Ultimate Holding CompanyIf' }).getByPlaceholder('Enter Name').click();
-  await page.locator('subsection').filter({ hasText: 'Ultimate Holding CompanyIf' }).getByPlaceholder('Enter Name').fill('N/A');
-  await page.locator('form-field-wrapper').filter({ hasText: 'Country of Incorporation' }).getByRole('combobox').selectOption('Sri Lanka');
-  await page.locator('subsection').filter({ hasText: 'Ultimate Holding CompanyIf' }).getByPlaceholder('Enter Nature of Business').click();
-  await page.locator('subsection').filter({ hasText: 'Ultimate Holding CompanyIf' }).getByPlaceholder('Enter Nature of Business').fill('Test Test test test test');
-  await page.locator('field-group').filter({ hasText: 'Registered Office Address' }).getByPlaceholder('Enter Address Line 1').click();
-  await page.locator('field-group').filter({ hasText: 'Registered Office Address' }).getByPlaceholder('Enter Address Line 1').fill('N/A');
-  await page.locator('field-group').filter({ hasText: 'Registered Office Address' }).getByPlaceholder('Enter City').click();
-  await page.locator('field-group').filter({ hasText: 'Registered Office Address' }).getByPlaceholder('Enter City').fill('N/A');
-  await page.locator('field-group').filter({ hasText: 'Registered Office Address' }).getByPlaceholder('Enter State/Province/Region').click();
-  await page.locator('field-group').filter({ hasText: 'Registered Office Address' }).getByPlaceholder('Enter State/Province/Region').fill('N/A');
-  await page.locator('field-group').filter({ hasText: 'Registered Office Address' }).getByPlaceholder('Enter Postal Code').click();
-  await page.locator('field-group').filter({ hasText: 'Registered Office Address' }).getByPlaceholder('Enter Postal Code').fill('12560');
-  await page.locator('form-field-wrapper').filter({ hasText: 'Country Select Country N/A' }).getByRole('combobox').selectOption('Sri Lanka');
+  await page.locator('form-field-wrapper').filter({ hasText: 'Financial Year End' }).getByRole('combobox').selectOption('31st March');
+
+  // Section E - Annexure 1 (inline table row)
+  await page.getByRole('row').filter({ has: page.getByRole('textbox', { name: 'Name of The Company' }) }).first().getByRole('textbox', { name: 'Name of The Company' }).fill('XYZ');
+  await page.getByRole('row').filter({ has: page.getByRole('textbox', { name: 'Name of The Company' }) }).first().getByRole('combobox').selectOption('Partnership');
+
+  const ultimateHolding = page.locator('subsection').filter({ hasText: 'Ultimate Holding CompanyIf' });
+  await ultimateHolding.getByPlaceholder('Enter Name').click();
+  await ultimateHolding.getByPlaceholder('Enter Name').fill('N/A');
+  await ultimateHolding.getByRole('combobox').first().selectOption('Sri Lanka');
+  await ultimateHolding.getByPlaceholder('Enter Nature of Business').click();
+  await ultimateHolding.getByPlaceholder('Enter Nature of Business').fill('Test Test test test test');
+  await ultimateHolding.getByPlaceholder('Enter Address Line 1').click();
+  await ultimateHolding.getByPlaceholder('Enter Address Line 1').fill('N/A');
+  await ultimateHolding.getByPlaceholder('Enter City').click();
+  await ultimateHolding.getByPlaceholder('Enter City').fill('N/A');
+  await ultimateHolding.getByPlaceholder('Enter State/Province/Region').click();
+  await ultimateHolding.getByPlaceholder('Enter State/Province/Region').fill('N/A');
+  await ultimateHolding.getByPlaceholder('Enter Postal Code').click();
+  await ultimateHolding.getByPlaceholder('Enter Postal Code').fill('12560');
+  await ultimateHolding.getByRole('combobox').last().selectOption('Sri Lanka');
+  // Next is ignored on a freshly filled page 1 - it only works once the draft is saved and the page reloaded
+  await page.getByRole('button', { name: 'Save Draft' }).click();
   await page.waitForTimeout(3000);
-  await page.getByRole('button', { name: 'Next' }).click();
+  await page.reload();
+  await goNext(page, page.locator('form-field-wrapper').filter({ hasText: 'Group Structure' }));
 
   // Page 2
 
@@ -121,7 +138,7 @@ test('Apply Managing Company license with valid data', async ({ page }) => {
   // await page.getByPlaceholder('Percentage of Shares Held').click();
   // await page.getByPlaceholder('Percentage of Shares Held').fill('100');
   await page.waitForTimeout(2000);
-  await page.getByRole('button', { name: 'Next' }).click();
+  await goNext(page, page.getByRole('button', { name: '+ Add Entry' }));
 
   // Page 3
   await page.getByRole('button', { name: '+ Add Entry' }).click();
@@ -174,7 +191,7 @@ test('Apply Managing Company license with valid data', async ({ page }) => {
   await selectRadio(page, ' Is an undischarged bankrupt, either within or outside Sri Lanka', 0);
 
   await page.waitForTimeout(2000);
-  await page.getByRole('button', { name: 'Next' }).click();
+  await goNext(page, page.locator('form-field-wrapper').filter({ hasText: 'Are there any such proceedings now pending in a court of law' }));
 
   // Page 4
   await selectRadio(page, 'Are there any such proceedings now pending in a court of law', 0);
@@ -192,7 +209,7 @@ test('Apply Managing Company license with valid data', async ({ page }) => {
   await selectRadio(page, 'renew its licence in terms of the applicable Rules of the SEC', 0);
 
   await page.waitForTimeout(2000);
-  await page.getByRole('button', { name: 'Next' }).click();
+  await goNext(page, page.getByRole('textbox', { name: 'Regulator' }));
 
   // Page 5
   await page.getByRole('textbox', { name: 'Regulator' }).click();
@@ -217,6 +234,16 @@ test('Apply Managing Company license with valid data', async ({ page }) => {
         await fileInput.setInputFiles(filePath);
     }
 
+  // click Submit until the confirmation dialog opens, then confirm
+  async function submitApplication(page: Page) {
+    const dialog = page.getByRole('dialog');
+    await expect(async () => {
+      await page.getByRole('button', { name: 'Submit' }).click();
+      await expect(dialog).toBeVisible({ timeout: 3000 });
+    }).toPass({ timeout: 30000 });
+    await dialog.getByRole('button', { name: 'Submit' }).click();
+  }
+
   const uploads = page.getByLabel(/upload document/i);
 
   for (let i = 0; i < await uploads.count(); i++) {
@@ -228,12 +255,12 @@ test('Apply Managing Company license with valid data', async ({ page }) => {
   await page.getByRole('combobox').selectOption('Chief Executive Officer');
 
   await page.waitForTimeout(2000); 
-  await page.getByRole('button', { name: 'Submit' }).click();
-  await page.getByRole('button', { name: 'Confirm' }).click();
+  await submitApplication(page);
 
   // Page 6 - Payment
   await page.waitForURL(/licenses\/.*\/form-view\/2/);
   await page.getByRole('button', { name: 'OK' }).click();
+  await selectRadio(page, 'Are you registered for VAT?', 0);
   await page.getByRole('textbox', { name: 'Enter Address Line 1' }).click();
   await page.getByRole('textbox', { name: 'Enter Address Line 1' }).fill('Kaluthara');
   await page.getByRole('textbox', { name: 'Enter City' }).click();
@@ -247,7 +274,6 @@ test('Apply Managing Company license with valid data', async ({ page }) => {
   await page.getByRole('checkbox', { name: 'I hereby acknowledge that I' }).check();
   await page.getByRole('checkbox', { name: 'We declare that all' }).check();
   await page.waitForTimeout(2000);
-  await page.getByRole('button', { name: 'Submit' }).click();
-  await page.getByRole('button', { name: 'Confirm' }).click();
+  await submitApplication(page);
   await page.getByRole('button', { name: 'Ok' }).click();
 });
