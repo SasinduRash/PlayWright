@@ -29,9 +29,9 @@ test('Apply Credit Rating Agency final grant with valid data', async ({ page }) 
   // login
   await page.goto('https://dev-sl-sec.corewatch.io/auth/entity/login');
   await page.getByRole('textbox', { name: 'Email' }).click();
-  await page.getByRole('textbox', { name: 'Email' }).fill('ullanka_1@holdings.co.lk');
+  await page.getByRole('textbox', { name: 'Email' }).fill('xyz@mail.com');
   await page.getByRole('textbox', { name: 'Password' }).click();
-  await page.getByRole('textbox', { name: 'Password' }).fill('Test@user1');
+  await page.getByRole('textbox', { name: 'Password' }).fill('Test123#');
   // OTP verification (fixed dev OTP)
   // logging in again within a short time is rejected with "Can't request OTP in a short period." - wait and retry
   const otpHeading = page.getByRole('heading', { name: 'Check your email' });
